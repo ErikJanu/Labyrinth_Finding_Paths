@@ -57,7 +57,7 @@ def bfs(lab: list[str], start: tuple[int, int], end: tuple[int, int]) -> list[tu
 
     while path:
         current = path.popleft()
-        if current == end:
+        if end in already_visited_set:
             solution_path = []
             current = end
             while current != start:
@@ -71,6 +71,7 @@ def bfs(lab: list[str], start: tuple[int, int], end: tuple[int, int]) -> list[tu
             column_to_consider = int(current[1]) + int(move_to_consider[1])
             neighbour = tuple((row_to_consider, column_to_consider))
             if neighbour not in already_visited_set and is_traversable(lab, neighbour):
+                print(neighbour)
                 path.append(neighbour)
                 already_visited_set.add(neighbour)
                 dict_of_parents[neighbour] = current
