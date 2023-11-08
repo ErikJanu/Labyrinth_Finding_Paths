@@ -4,8 +4,7 @@ from collections import deque
 def print_labyrinth(lab: list[str], path: list[tuple[int, int]] = None):
     if path is not None:
         for line_index, line in enumerate(lab):
-            result_tuple_list = [path_tuple for path_tuple in path]
-            for element in result_tuple_list:
+            for element in path:
                 if element[0] == line_index:
                     line = replace_at_index(line, "X", element[1])
             print(line)
@@ -33,18 +32,19 @@ def prompt_integer(message: str) -> int:
 
 
 def check_if_in_labyrinth_and_traversable(lab: list[str], point: tuple[int, int]) -> bool:
+    # remove numeration at top, bottom and sides for correct amount of rows and columns
     row_counter = len(lab) - 2
     column_counter = len(lab[0]) - 2
     if point[0] > row_counter or point[1] > column_counter:
         return False
-    if not is_traversable(lab, point) or not is_traversable(lab, point):
+    if not is_traversable(lab, point):
         return False
     return True
 
 
 def prompt_user_for_location(name: str) -> tuple[int, int]:
-    row = int(prompt_integer("Row of " + name + ": "))
-    column = int(prompt_integer("Column of " + name + ": "))
+    row = int(prompt_integer("In which row is your " + name + " point?"))
+    column = int(prompt_integer("In which column is your " + name + " point?"))
     return row, column
 
 
@@ -90,15 +90,27 @@ def is_traversable(lab: list[str], location: tuple[int, int]) -> bool:
 if __name__ == '__main__':
     space = '\u0020'
     wall = '\u2588'
-    labyrinth = [f"{wall}{wall}{wall}{space}{space}{space}{wall}{wall}{wall}{wall}",
-                 f"{wall}{wall}{space}{space}{wall}{space}{space}{space}{wall}{wall}",
-                 f"{wall}{wall}{wall}{wall}{wall}{space}{wall}{space}{wall}{wall}",
-                 f"{wall}{wall}{space}{space}{space}{space}{wall}{space}{wall}{wall}",
-                 f"{wall}{wall}{space}{wall}{wall}{wall}{wall}{space}{space}{wall}",
-                 f"{wall}{wall}{space}{space}{space}{space}{space}{space}{space}{wall}",
-                 f"{wall}{space}{space}{wall}{space}{wall}{wall}{space}{wall}{wall}",
-                 f"{wall}{space}{wall}{space}{space}{wall}{space}{space}{wall}{wall}",
-                 f"{wall}{space}{space}{wall}{space}{space}{space}{wall}{wall}{wall}"]
+
+    # another labyrinth option to try out
+    # labyrinth = [f"{wall}{wall}{wall}{space}{space}{space}{wall}{wall}{wall}{wall}",
+    #              f"{wall}{wall}{space}{space}{wall}{space}{space}{space}{wall}{wall}",
+    #              f"{wall}{wall}{wall}{wall}{wall}{space}{wall}{space}{wall}{wall}",
+    #              f"{wall}{wall}{space}{space}{space}{space}{wall}{space}{wall}{wall}",
+    #              f"{wall}{wall}{space}{wall}{wall}{wall}{wall}{space}{space}{wall}",
+    #              f"{wall}{wall}{space}{space}{space}{space}{space}{space}{space}{wall}",
+    #              f"{wall}{space}{space}{wall}{space}{wall}{wall}{space}{wall}{wall}",
+    #              f"{wall}{space}{wall}{space}{space}{wall}{space}{space}{wall}{wall}",
+    #              f"{wall}{space}{space}{wall}{space}{space}{space}{wall}{wall}{wall}"]
+
+    labyrinth = [f"{wall}{wall}{wall}{wall}{wall}{space}{wall}{wall}{wall}{wall}",
+                 f"{wall}{wall}{wall}{wall}{wall}{space}{space}{space}{wall}{wall}",
+                 f"{wall}{wall}{wall}{wall}{space}{space}{wall}{space}{wall}{wall}",
+                 f"{wall}{space}{space}{space}{space}{wall}{space}{space}{space}{wall}",
+                 f"{wall}{space}{wall}{wall}{wall}{wall}{space}{wall}{space}{wall}",
+                 f"{wall}{space}{space}{space}{wall}{wall}{space}{space}{wall}{wall}",
+                 f"{wall}{wall}{wall}{space}{space}{wall}{wall}{space}{wall}{wall}",
+                 f"{wall}{wall}{wall}{space}{space}{wall}{space}{space}{wall}{wall}",
+                 f"{wall}{wall}{wall}{wall}{space}{space}{space}{wall}{wall}{wall}"]
 
     print_labyrinth(labyrinth)
 
@@ -114,4 +126,8 @@ if __name__ == '__main__':
 
     res_path = bfs(labyrinth, starting_point, end_point)
 
-    print_labyrinth(labyrinth, res_path)
+    # empty lists are considered False
+    if not res_path:
+        print("There is no traversable path between these two points. :(")
+    else:
+        print_labyrinth(labyrinth, res_path)
